@@ -138,7 +138,7 @@ export default function FinderForm({ refreshItems }) {
               Match Found 🎉
             </h3>
 <QRCodeCanvas
-value={`${process.env.NEXT_PUBLIC_BASE_URL}/verify/${matchedLfId}`}
+value={`https://lost-and-found-chi-five.vercel.app/v/${matchedLfId}`}
 
 
   size={180}

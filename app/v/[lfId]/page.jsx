@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+
 async function getLostItem(lfId) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/verify/${lfId}`,
@@ -9,7 +10,6 @@ async function getLostItem(lfId) {
   return res.json();
 }
 
-
 export default async function VerifyPage({ params }) {
   const { lfId } = params;
 
@@ -19,9 +19,7 @@ export default async function VerifyPage({ params }) {
   return (
     <section className="min-h-screen flex items-center justify-center bg-[#020617] text-white px-6">
       <div className="max-w-xl w-full bg-white/5 border border-white/10 rounded-2xl p-6 space-y-3">
-        <h1 className="text-2xl font-bold text-sky-400">
-          Lost Item Verified
-        </h1>
+        <h1 className="text-2xl font-bold text-sky-400">Lost Item Verified</h1>
 
         <p><b>ID:</b> {item.lfId}</p>
         <p><b>Item:</b> {item.itemName}</p>
