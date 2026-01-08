@@ -138,7 +138,8 @@ export default function FinderForm({ refreshItems }) {
               Match Found 🎉
             </h3>
 <QRCodeCanvas
- value={`${process.env.NEXT_PUBLIC_BASE_URL}/verify/${matchedLfId}`}
+value={`${process.env.NEXT_PUBLIC_BASE_URL}/verify/${matchedLfId}`}
+
 
   size={180}
   bgColor="#0f172a"
