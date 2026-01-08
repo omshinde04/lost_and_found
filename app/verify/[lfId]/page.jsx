@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 async function getLostItem(lfId) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SITE_URL}/api/lost-items/${lfId}`,
+    `${process.env.NEXT_PUBLIC_SITE_URL}/api/verify/${lfId}}`,
     { cache: "no-store" }
   );
 
