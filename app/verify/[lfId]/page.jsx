@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 
 export default function VerifyPage({ params }) {
-  const { lfId } = params;
+  const lfId = params?.lfId;
 
   const [item, setItem] = useState(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,15 +18,22 @@ export default function VerifyPage({ params }) {
 
     const fetchItem = async () => {
       try {
-        const res = await fetch(`/api/verify/${lfId}`);
+        const res = await fetch(`/api/verify/${lfId}`, {
+          method: "GET",
+          cache: "no-store",       // 🔥 CRITICAL
+          headers: {
+            "Cache-Control": "no-cache"
+          }
+        });
 
         if (!res.ok) {
           throw new Error("Not found");
         }
 
         const data = await res.json();
-        setItem(data); // ✅ ONLY SUCCESS PATH
-      } catch (err) {
+        setItem(data);
+        setError(null);            // 🔥 FORCE CLEAR ERROR
+      } catch (e) {
         setError("Invalid verification link");
       } finally {
         setLoading(false);
