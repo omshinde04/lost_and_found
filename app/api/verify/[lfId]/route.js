@@ -4,21 +4,26 @@ import LostItem from "@/models/LostItem";
 
 export async function GET(req) {
   try {
-    // ✅ SAFELY PARSE lfId (RSC-safe)
+    // ✅ Parse lfId safely from URL
     const url = new URL(req.url);
-    const pathname = url.pathname; // no query string
-    const lfId = decodeURIComponent(pathname.split("/").pop());
+    const pathname = url.pathname;
+    const rawLfId = decodeURIComponent(pathname.split("/").pop());
 
-    if (!lfId) {
+    if (!rawLfId) {
       return NextResponse.json(
         { message: "Lost item ID required" },
         { status: 400 }
       );
     }
 
+    const lfId = rawLfId.trim();
+
     await connectDB();
 
-    const lostItem = await LostItem.findOne({ lfId: lfId.trim() });
+    // ✅ FINAL FIX: Case + whitespace safe match
+    const lostItem = await LostItem.findOne({
+      lfId: { $regex: new RegExp(`^${lfId}$`, "i") }
+    });
 
     if (!lostItem) {
       return NextResponse.json(
@@ -27,6 +32,7 @@ export async function GET(req) {
       );
     }
 
+    // ✅ Success response
     return NextResponse.json(
       {
         lfId: lostItem.lfId,
@@ -43,6 +49,7 @@ export async function GET(req) {
       },
       { status: 200 }
     );
+
   } catch (error) {
     console.error("Verify API Error:", error);
     return NextResponse.json(
