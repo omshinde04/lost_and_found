@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 
 export default function VerifyPage({ params }) {
   const { lfId } = params;
+
   const [item, setItem] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!lfId) {
@@ -15,17 +16,24 @@ export default function VerifyPage({ params }) {
       return;
     }
 
-    fetch(`/api/verify/${lfId}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.message) {
-          setError(data.message);
-        } else {
-          setItem(data);
+    const fetchItem = async () => {
+      try {
+        const res = await fetch(`/api/verify/${lfId}`);
+
+        if (!res.ok) {
+          throw new Error("Not found");
         }
-      })
-      .catch(() => setError("Failed to load verification"))
-      .finally(() => setLoading(false));
+
+        const data = await res.json();
+        setItem(data); // ✅ ONLY SUCCESS PATH
+      } catch (err) {
+        setError("Invalid verification link");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItem();
   }, [lfId]);
 
   if (loading) {
@@ -38,7 +46,7 @@ export default function VerifyPage({ params }) {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-red-400">
+      <div className="min-h-screen flex items-center justify-center text-red-500">
         {error}
       </div>
     );
@@ -51,6 +59,7 @@ export default function VerifyPage({ params }) {
           Lost Item Verification
         </h1>
 
+        <p><b>ID:</b> {item.lfId}</p>
         <p><b>Item:</b> {item.itemName}</p>
         <p><b>Type:</b> {item.itemType}</p>
         <p><b>Location:</b> {item.location}</p>
