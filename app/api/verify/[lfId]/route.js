@@ -5,9 +5,11 @@ import LostItem from "@/models/LostItem";
 /* =========================
    GET LOST ITEM BY lfId
 ========================= */
-export async function GET(req, { params }) {
+export async function GET(req) {
   try {
-    const { lfId } = params;
+    // ✅ SAFELY EXTRACT lfId FROM URL (Vercel-safe)
+    const url = new URL(req.url);
+    const lfId = url.pathname.split("/").pop();
 
     if (!lfId) {
       return NextResponse.json(
@@ -18,7 +20,8 @@ export async function GET(req, { params }) {
 
     await connectDB();
 
-    const lostItem = await LostItem.findOne({ lfId });
+    // ✅ trim() avoids hidden space issues
+    const lostItem = await LostItem.findOne({ lfId: lfId.trim() });
 
     if (!lostItem) {
       return NextResponse.json(
@@ -27,7 +30,7 @@ export async function GET(req, { params }) {
       );
     }
 
-    // ✅ RETURN FULL DETAILS (AS YOU WANT)
+    // ✅ RETURN FULL DETAILS
     return NextResponse.json(
       {
         lfId: lostItem.lfId,
@@ -37,7 +40,7 @@ export async function GET(req, { params }) {
         location: lostItem.location,
         date: lostItem.date,
 
-        // ✅ DIRECT CONTACT INFO
+        // 🔐 OWNER CONTACT
         userName: lostItem.userName,
         userEmail: lostItem.userEmail,
         contact: lostItem.contact,
