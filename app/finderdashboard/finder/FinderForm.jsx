@@ -138,12 +138,11 @@ export default function FinderForm({ refreshItems }) {
               Match Found 🎉
             </h3>
 <QRCodeCanvas
-  value={`${process.env.NEXT_PUBLIC_SITE_URL}/verify/${matchedLfId}`}
-  size={160}
+  value={`https://lost-and-found-self-gamma.vercel.app/verify/${matchedLfId}`}
+  size={180}
   bgColor="#0f172a"
   fgColor="#38bdf8"
 />
-
 
 
 
