@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 async function getLostItem(lfId) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/verify/${lfId}`,
+    `${process.env.VERCEL_URL ? "https://" + process.env.VERCEL_URL : ""}/api/verify/${lfId}`,
     { cache: "no-store" }
   );
 
