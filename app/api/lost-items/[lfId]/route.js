@@ -3,10 +3,8 @@ import { connectDB } from "@/lib/db";
 import LostItem from "@/models/LostItem";
 
 /* =========================
-   📌 GET LOST ITEM BY lfId
-   (Used for QR Verification)
+   GET LOST ITEM BY lfId
 ========================= */
-
 export async function GET(req, { params }) {
   try {
     const { lfId } = params;
@@ -29,7 +27,7 @@ export async function GET(req, { params }) {
       );
     }
 
-    /* 🔐 RETURN ONLY SAFE FIELDS */
+    // ✅ RETURN FULL DETAILS (AS YOU WANT)
     return NextResponse.json(
       {
         lfId: lostItem.lfId,
@@ -38,11 +36,14 @@ export async function GET(req, { params }) {
         description: lostItem.description,
         location: lostItem.location,
         date: lostItem.date,
+
+        // ✅ DIRECT CONTACT INFO
+        userName: lostItem.userName,
+        userEmail: lostItem.userEmail,
+        contact: lostItem.contact,
+
         imageUrl: lostItem.imageUrl,
         status: lostItem.status,
-
-        /* ⚠️ CONTACT IS NOT SENT YET */
-        contactHidden: true,
       },
       { status: 200 }
     );
