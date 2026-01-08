@@ -2,12 +2,14 @@ import { notFound } from "next/navigation";
 
 async function getLostItem(lfId) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/lost-items/${lfId}`,
+    `/api/lost-items/${lfId}`,
     { cache: "no-store" }
   );
+
   if (!res.ok) return null;
   return res.json();
 }
+
 
 export default async function VerifyPage({ params }) {
   const item = await getLostItem(params.lfId);
