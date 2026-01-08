@@ -1,17 +1,23 @@
-import { notFound } from "next/navigation";
+import { notFound, headers } from "next/navigation";
 
 async function getLostItem(lfId) {
-  const res = await fetch(`/api/verify/${lfId}`, {
-    cache: "no-store",
-  });
+  const headersList = headers();
+  const host = headersList.get("host");
+  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+
+  const res = await fetch(
+    `${protocol}://${host}/api/verify/${lfId}`,
+    { cache: "no-store" }
+  );
 
   if (!res.ok) return null;
   return res.json();
 }
 
-
 export default async function VerifyPage({ params }) {
   const { lfId } = params;
+
+  if (!lfId) return notFound();
 
   const item = await getLostItem(lfId);
   if (!item) return notFound();
@@ -29,7 +35,6 @@ export default async function VerifyPage({ params }) {
         <p><b>Location:</b> {item.location}</p>
         <p><b>Date:</b> {item.date}</p>
 
-        {/* DIRECT CONTACT DISPLAY */}
         <div className="mt-4 border-t border-white/10 pt-4">
           <p className="text-green-400 font-semibold">Owner Contact</p>
           <p><b>Name:</b> {item.userName}</p>
