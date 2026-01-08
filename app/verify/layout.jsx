@@ -1,9 +1,7 @@
 export default function VerifyLayout({ children }) {
   return (
-    <html>
-      <body style={{ background: "black", color: "white" }}>
-        {children}
-      </body>
-    </html>
+    <div className="min-h-screen bg-black text-white">
+      {children}
+    </div>
   );
 }
