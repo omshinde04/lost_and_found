@@ -10,6 +10,7 @@ async function getLostItem(lfId) {
   return res.json();
 }
 
+
 export default async function VerifyPage({ params }) {
   const { lfId } = params;
 
