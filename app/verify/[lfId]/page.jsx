@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
 
 async function getLostItem(lfId) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_SITE_URL}/api/verify/${lfId}}`,
-    { cache: "no-store" }
-  );
+  const res = await fetch(`/api/verify/${lfId}`, {
+    cache: "no-store",
+  });
 
   if (!res.ok) return null;
   return res.json();
