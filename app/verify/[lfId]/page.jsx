@@ -1,26 +1,55 @@
-import { notFound, headers } from "next/navigation";
+"use client";
 
-async function getLostItem(lfId) {
-  const headersList = headers();
-  const host = headersList.get("host");
-  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+import { useEffect, useState } from "react";
 
-  const res = await fetch(
-    `${protocol}://${host}/api/verify/${lfId}`,
-    { cache: "no-store" }
-  );
-
-  if (!res.ok) return null;
-  return res.json();
-}
-
-export default async function VerifyPage({ params }) {
+export default function VerifyPage({ params }) {
   const { lfId } = params;
 
-  if (!lfId) return notFound();
+  const [item, setItem] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const item = await getLostItem(lfId);
-  if (!item) return notFound();
+  useEffect(() => {
+    if (!lfId) {
+      setError("Invalid verification link");
+      setLoading(false);
+      return;
+    }
+
+    const fetchItem = async () => {
+      try {
+        const res = await fetch(`/api/verify/${lfId}`);
+        if (!res.ok) {
+          throw new Error("Item not found");
+        }
+
+        const data = await res.json();
+        setItem(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItem();
+  }, [lfId]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black text-white">
+        Loading verification details...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black text-red-400">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <section className="min-h-screen bg-black text-white px-6 py-24">
