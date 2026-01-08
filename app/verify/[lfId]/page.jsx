@@ -11,33 +11,31 @@ async function getLostItem(lfId) {
 }
 
 export default async function VerifyPage({ params }) {
-  const item = await getLostItem(params.lfId);
+  const { lfId } = params;
+
+  const item = await getLostItem(lfId);
   if (!item) return notFound();
 
   return (
     <section className="min-h-screen bg-black text-white px-6 py-24">
-      <div className="max-w-xl mx-auto bg-white/5 border border-white/10 rounded-2xl p-6 space-y-5">
+      <div className="max-w-xl mx-auto bg-white/5 border border-white/10 rounded-2xl p-6 space-y-4">
 
         <h1 className="text-2xl font-bold text-sky-400">
-          Lost Item Details
+          Lost Item Verification
         </h1>
 
-        {/* ITEM INFO */}
         <p><b>Item:</b> {item.itemName}</p>
         <p><b>Type:</b> {item.itemType}</p>
         <p><b>Location:</b> {item.location}</p>
         <p><b>Date:</b> {item.date}</p>
 
-        <hr className="border-white/10 my-3" />
-
-        {/* OWNER CONTACT (DIRECT) */}
-        <h2 className="text-lg font-semibold text-green-400">
-          Owner Contact Information
-        </h2>
-
-        <p><b>Name:</b> {item.userName}</p>
-        <p><b>Email:</b> {item.userEmail}</p>
-        <p><b>Phone:</b> {item.contact}</p>
+        {/* DIRECT CONTACT DISPLAY */}
+        <div className="mt-4 border-t border-white/10 pt-4">
+          <p className="text-green-400 font-semibold">Owner Contact</p>
+          <p><b>Name:</b> {item.userName}</p>
+          <p><b>Email:</b> {item.userEmail}</p>
+          <p><b>Phone:</b> {item.contact}</p>
+        </div>
 
       </div>
     </section>

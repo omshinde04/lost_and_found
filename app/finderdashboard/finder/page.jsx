@@ -31,7 +31,7 @@ export default function FinderDashboard() {
   }, []);
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-[#020617] via-black to-[#020617] text-white pt-24 px-4 pb-28">
+    <section className="min-h-screen bg-linear-to-br from-[#020617] via-black to-[#020617] text-white pt-24 px-4 pb-28">
       <div className="max-w-7xl mx-auto">
 
         <div className="mb-8">
