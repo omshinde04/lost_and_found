@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 async function getLostItem(lfId) {
   const res = await fetch(
-    `${process.env.VERCEL_URL ? "https://" + process.env.VERCEL_URL : ""}/api/verify/${lfId}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/verify/${lfId}`,
     { cache: "no-store" }
   );
 
@@ -12,8 +12,6 @@ async function getLostItem(lfId) {
 
 export default async function VerifyPage({ params }) {
   const { lfId } = params;
-
-  if (!lfId) notFound();
 
   const item = await getLostItem(lfId);
   if (!item) notFound();
