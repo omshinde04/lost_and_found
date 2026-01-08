@@ -6,8 +6,8 @@ export default function VerifyPage({ params }) {
   const { lfId } = params;
 
   const [item, setItem] = useState(null);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!lfId) {
@@ -18,15 +18,22 @@ export default function VerifyPage({ params }) {
 
     const fetchItem = async () => {
       try {
-        const res = await fetch(`/api/verify/${lfId}`);
+        const url = `${window.location.origin}/api/verify/${lfId}`;
+        console.log("VERIFY FETCH URL:", url);
+
+        const res = await fetch(url);
+        console.log("VERIFY STATUS:", res.status);
+
         if (!res.ok) {
-          throw new Error("Item not found");
+          const text = await res.text();
+          console.error("VERIFY ERROR BODY:", text);
+          throw new Error("Verification failed");
         }
 
         const data = await res.json();
         setItem(data);
       } catch (err) {
-        setError(err.message);
+        setError("Invalid verification link");
       } finally {
         setLoading(false);
       }
@@ -45,7 +52,7 @@ export default function VerifyPage({ params }) {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black text-red-400">
+      <div className="min-h-screen flex items-center justify-center bg-black text-red-500">
         {error}
       </div>
     );
@@ -54,7 +61,6 @@ export default function VerifyPage({ params }) {
   return (
     <section className="min-h-screen bg-black text-white px-6 py-24">
       <div className="max-w-xl mx-auto bg-white/5 border border-white/10 rounded-2xl p-6 space-y-4">
-
         <h1 className="text-2xl font-bold text-sky-400">
           Lost Item Verification
         </h1>
@@ -70,7 +76,6 @@ export default function VerifyPage({ params }) {
           <p><b>Email:</b> {item.userEmail}</p>
           <p><b>Phone:</b> {item.contact}</p>
         </div>
-
       </div>
     </section>
   );
