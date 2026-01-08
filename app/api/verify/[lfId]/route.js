@@ -2,14 +2,12 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import LostItem from "@/models/LostItem";
 
-/* =========================
-   GET LOST ITEM BY lfId
-========================= */
 export async function GET(req) {
   try {
-    // ✅ SAFELY EXTRACT lfId FROM URL (Vercel-safe)
+    // ✅ SAFELY PARSE lfId (RSC-safe)
     const url = new URL(req.url);
-    const lfId = url.pathname.split("/").pop();
+    const pathname = url.pathname; // no query string
+    const lfId = decodeURIComponent(pathname.split("/").pop());
 
     if (!lfId) {
       return NextResponse.json(
@@ -20,7 +18,6 @@ export async function GET(req) {
 
     await connectDB();
 
-    // ✅ trim() avoids hidden space issues
     const lostItem = await LostItem.findOne({ lfId: lfId.trim() });
 
     if (!lostItem) {
@@ -30,7 +27,6 @@ export async function GET(req) {
       );
     }
 
-    // ✅ RETURN FULL DETAILS
     return NextResponse.json(
       {
         lfId: lostItem.lfId,
@@ -39,12 +35,9 @@ export async function GET(req) {
         description: lostItem.description,
         location: lostItem.location,
         date: lostItem.date,
-
-        // 🔐 OWNER CONTACT
         userName: lostItem.userName,
         userEmail: lostItem.userEmail,
         contact: lostItem.contact,
-
         imageUrl: lostItem.imageUrl,
         status: lostItem.status,
       },
