@@ -14,29 +14,26 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
 
-  /* ✅ Sync user on every route change */
+  // ✅ Sync user on every route change (SAFE)
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    } else {
-      setUser(null);
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      setUser(storedUser ? JSON.parse(storedUser) : null);
     }
   }, [pathname]);
 
-  /* ✅ Logout */
+  // ✅ Logout
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUser(null);
     router.push("/login");
   };
 
-  /* ✅ Dashboard route */
-const dashboardRoute =
-  user?.role === "loser"
-    ? "/dashboard/loser"
-    : "/finderdashboard/finder";
-
+  // ✅ Dashboard route (SAFE)
+  const dashboardRoute =
+    user?.role === "loser"
+      ? "/dashboard/loser"
+      : "/finderdashboard/finder";
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-[#0B0F19]/80 backdrop-blur border-b border-[#1F2933]">
@@ -82,6 +79,7 @@ const dashboardRoute =
         <button
           onClick={() => setOpen(!open)}
           className="md:hidden text-white text-2xl"
+          aria-label="Toggle menu"
         >
           {open ? <FiX /> : <FiMenu />}
         </button>
@@ -142,7 +140,7 @@ function NavItem({ href, children, onClick }) {
   return (
     <Link href={href} onClick={onClick} className="relative group">
       <span className="hover:text-white transition">{children}</span>
-      <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-sky-400 transition-all group-hover:w-full"></span>
+      <span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-sky-400 transition-all group-hover:w-full" />
     </Link>
   );
 }
